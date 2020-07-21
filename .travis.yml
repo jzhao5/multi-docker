@@ -5,18 +5,20 @@ services:
   - docker
 
 before_install:
-  - docker build -t jzhao5/docker-react2 -f Dockerfile.dev .
+  - docker build -t jzhao5/multi-docker2 -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run -e CI=true jzhao5/docker-react2 npm run test
-deploy:
-    provider: elasticbeanstalk
-    region: "us-east-1"
-    app: "docker-react2"
-    env: "DockerReact2-env"
-    bucket_name: "myapp-demo-2020"
-    bucket_path: "docker"
-    on:
-        branch: master
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key: $AWS_SECRET_KEY
+  - docker run -e CI=true jzhao5/multi-docker2 npm run test
+
+after_success:
+  - docker build -t jzhao5/multi-client2 ./client
+  - docker build -t jzhao5/multi-nginx2 ./nginx
+  - docker build -t jzhao5/multi-server2 ./server
+  - docker build -t jzhao5/multi-worker2 ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push jzhao5/multi-client2
+  - docker push jzhao5/multi-nginx2
+  - docker push jzhao5/multi-server2
+  - docker push jzhao5/multi-worker2
