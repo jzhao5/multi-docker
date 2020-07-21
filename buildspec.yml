@@ -1,0 +1,14 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      docker: 19
+  build:
+    commands:
+        - docker build -t jzhao5/docker-react2 -f Dockerfile.dev .
+  post_build:
+    commands:
+        - echo Build completed on `date`
+        - echo "The path to the output artifacts is:"
+        - echo $CODEBUILD_SRC_DIR
+        
