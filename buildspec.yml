@@ -1,26 +1,31 @@
 version: 0.2
 phases:
+  
   install:
     runtime-versions:
       docker: 19
+
+  pre_build:
+    commands:
+      - $(aws ecr get-login --no-include-email --region us-east-1)
   build:
     commands:
-      - docker build -t jzhao5/multi-docker2 -f ./client/Dockerfile.dev ./client
-      - docker run -e CI=true jzhao5/multi-docker2 npm run test
+      - docker build -t multi-docker -f ./client/Dockerfile.dev ./client
+      - docker run -e CI=true multi-docker npm run test
   post_build:
     commands:
         - echo Build completed on `date`
         - echo "The path to the output artifacts is:"
         - echo $CODEBUILD_SRC_DIR
-        - docker build -t jzhao5/multi-client2 ./client
-        - docker build -t jzhao5/multi-nginx2 ./nginx
-        - docker build -t jzhao5/multi-server2 ./server
-        - docker build -t jzhao5/multi-worker2 ./worker
+        - docker build -t multi-client:latest ./client
+        - docker build -t multi-nginx:latest ./nginx
+        - docker build -t multi-server:latest ./server
+        - docker build -t multi-worker:latest ./worker
         # Log in to the docker CLI
-        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+        # - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
         # Take those images and push them to docker hub
-        - docker push jzhao5/multi-client2
-        - docker push jzhao5/multi-nginx2
-        - docker push jzhao5/multi-server2
-        - docker push jzhao5/multi-worker2
+        - docker push myappdemo/multi-client
+        - docker push myappdemo/multi-nginx
+        - docker push myappdemo/multi-server
+        - docker push myappdemo/multi-worker
         
