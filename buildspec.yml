@@ -27,6 +27,5 @@ phases:
         - echo $CODEBUILD_SRC_DIR
         - docker build -t multi-client:latest ./client
         - docker tag multi-client:latest multi-client:$IMAGE_TAG
-        - docker push $REPOSITORY_URI_Multi-Client
-        - docker push $REPOSITORY_URI_Multi-Client:$IMAGE_TAG
-        
+        - docker push 149083378091.dkr.ecr.us-east-1.amazonaws.com/multi-client
+        - docker push multi-client:$IMAGE_TAG
