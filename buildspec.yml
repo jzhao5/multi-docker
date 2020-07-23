@@ -7,15 +7,22 @@ phases:
 
   pre_build:
     commands:
-      - $(aws ecr get-login --region $AWS_REGION)
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+      - REPOSITORY_URI=149083378091.dkr.ecr.us-east-1.amazonaws.com/myappdemo
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
     commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
       - docker build -t multi-docker -f ./client/Dockerfile.dev ./client
       - docker run -e CI=true multi-docker npm run test
   post_build:
     commands:
         - echo Build completed on `date`
-        - echo "The path to the output artifacts is:"
+        - echo Pushing the Docker images...
         - echo $CODEBUILD_SRC_DIR
         - docker build -t multi-client:latest ./client
         - docker build -t multi-nginx:latest ./nginx
@@ -24,8 +31,8 @@ phases:
         # Log in to the docker CLI
         # - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
         # Take those images and push them to docker hub
-        - docker push myappdemo/multi-client
-        - docker push myappdemo/multi-nginx
-        - docker push myappdemo/multi-server
-        - docker push myappdemo/multi-worker
+        - docker push multi-client:latest
+        - docker push multi-nginx:latest
+        - docker push multi-server:latest
+        - docker push multi-worker:latest
         
