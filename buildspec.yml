@@ -28,19 +28,13 @@ phases:
         - docker build -t multi-nginx:latest ./nginx
         - docker build -t multi-server:latest ./server
         - docker build -t multi-worker:latest ./worker
-        - docker tag multi-client:latest $REPOSITORY_URI:$IMAGE_TAG
-        - docker tag multi-nginx:latest  $REPOSITORY_URI:$IMAGE_TAG
-        - docker tag multi-server:latest $REPOSITORY_URI:$IMAGE_TAG
-        - docker tag multi-worker:latest $REPOSITORY_URI:$IMAGE_TAG
-        # Log in to the docker CLI
-        # - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-        # Take those images and push them to docker hub
+        
         - docker push multi-client:latest
-        - docker push $REPOSITORY_URI:$IMAGE_TAG
+        
         - docker push multi-nginx:latest
-        - docker push $REPOSITORY_URI:$IMAGE_TAG
+      
         - docker push multi-server:latest
-        - docker push $REPOSITORY_URI:$IMAGE_TAG
+
         - docker push multi-worker:latest
-        - docker push $REPOSITORY_URI:$IMAGE_TAG
+ 
         
