@@ -10,7 +10,7 @@ phases:
       - echo Logging in to Amazon ECR...
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
-      - REPOSITORY_URI=149083378091.dkr.ecr.us-east-1.amazonaws.com/multi-client
+      - REPOSITORY_URI=149083378091.dkr.ecr.us-east-1.amazonaws.com/myappdemo
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
@@ -24,10 +24,12 @@ phases:
         - echo Build completed on `date`
         - echo Pushing the Docker images...
         - echo $CODEBUILD_SRC_DIR
-        - docker build -t $REPOSITORY_URI:latest ./client
-        - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
-        - docker push $REPOSITORY_URI:latest
+        - docker build -t $REPOSITORY_URI/multi-client:latest ./client
+        - docker tag $REPOSITORY_URI/multi-client:latest $REPOSITORY_URI:$IMAGE_TAG
+        - docker push $REPOSITORY_URI/multi-client:latest
+        - docker push $REPOSITORY_URI:$IMAGE_TAG
+        - docker build -t $REPOSITORY_URI/multi-nginx:latest ./nginx
+        - docker tag $REPOSITORY_URI/multi-nginx:latest $REPOSITORY_URI:$IMAGE_TAG
+        - docker push $REPOSITORY_URI/multi-nginx:latest
         - docker push $REPOSITORY_URI:$IMAGE_TAG
         
-       
-
