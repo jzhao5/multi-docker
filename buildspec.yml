@@ -31,8 +31,8 @@ phases:
         # Log in to the docker CLI
         # - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
         # Take those images and push them to docker hub
-        - docker push multi-client:latest
-        - docker push multi-nginx:latest
-        - docker push multi-server:latest
-        - docker push multi-worker:latest
+        - docker push $REPOSITORY_URI:multi-client:latest
+        - docker push $REPOSITORY_URI:multi-nginx:latest
+        - docker push $REPOSITORY_URI:multi-server:latest
+        - docker push $REPOSITORY_URI:multi-worker:latest
         
