@@ -11,6 +11,9 @@ phases:
       - aws --version
       - $(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
       - REPOSITORY_URI_1=149083378091.dkr.ecr.us-east-1.amazonaws.com/multi-client
+      - REPOSITORY_URI_2=149083378091.dkr.ecr.us-east-1.amazonaws.com/multi-nginx
+      - REPOSITORY_URI_3=149083378091.dkr.ecr.us-east-1.amazonaws.com/multi-server
+      - REPOSITORY_URI_4=149083378091.dkr.ecr.us-east-1.amazonaws.com/multi-worker
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
@@ -30,3 +33,15 @@ phases:
         - docker tag $REPOSITORY_URI_1:latest $REPOSITORY_URI_1:$IMAGE_TAG
         - docker push $REPOSITORY_URI_1:latest
         - docker push $REPOSITORY_URI_1:$IMAGE_TAG
+        - docker build -t $REPOSITORY_URI_2:latest ./nginx
+        - docker tag $REPOSITORY_URI_2:latest $REPOSITORY_URI_2:$IMAGE_TAG
+        - docker push $REPOSITORY_URI_2:latest
+        - docker push $REPOSITORY_URI_2:$IMAGE_TAG
+        - docker build -t $REPOSITORY_URI_3:latest ./server
+        - docker tag $REPOSITORY_URI_3:latest $REPOSITORY_URI_3:$IMAGE_TAG
+        - docker push $REPOSITORY_URI_3:latest
+        - docker push $REPOSITORY_URI_3:$IMAGE_TAG
+        - docker build -t $REPOSITORY_URI_4 ./worker
+        - docker tag $REPOSITORY_URI_4:latest $REPOSITORY_URI_4:$IMAGE_TAG
+        - docker push $REPOSITORY_URI_4:latest
+        - docker push $REPOSITORY_URI_4:$IMAGE_TAG
