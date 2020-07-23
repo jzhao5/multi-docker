@@ -19,7 +19,7 @@ phases:
       - echo Building the Docker image...
       - docker build -t multi-docker -f ./client/Dockerfile.dev ./client
       - docker run -e CI=true multi-docker npm run test
-      - docker manifest create $REPOSITORY_URI $REPOSITORY_URI:multi-client $REPOSITORY_URI:multi-nginx
+      - docker manifest create 149083378091.dkr.ecr.us-east-1.amazonaws.com/myappdemo 149083378091.dkr.ecr.us-east-1.amazonaws.com/myappdemo:multi-client 149083378091.dkr.ecr.us-east-1.amazonaws.com/myappdemo:multi-nginx
   post_build:
     commands:
         - echo Build completed on `date`
@@ -27,6 +27,6 @@ phases:
         - echo $CODEBUILD_SRC_DIR
         - docker build -t multi-client:latest ./client
         - docker build -t multi-nginx:latest ./nginx
-        - docker manifest push $REPOSITORY_URI
+        - docker manifest push 149083378091.dkr.ecr.us-east-1.amazonaws.com/myappdemo
         - docker push $REPOSITORY_URI:$IMAGE_TAG
         
