@@ -19,7 +19,7 @@ phases:
       - echo Building the Docker image...
       - docker build -t multi-docker -f ./client/Dockerfile.dev ./client
       - docker run -e CI=true multi-docker npm run test
-      - export DOCKER_CLI_EXPERIMENTAL=enabled
+      
       - docker manifest create 149083378091.dkr.ecr.us-east-1.amazonaws.com/myappdemo 149083378091.dkr.ecr.us-east-1.amazonaws.com/myappdemo:multi-client 149083378091.dkr.ecr.us-east-1.amazonaws.com/myappdemo:multi-nginx
   post_build:
     commands:
