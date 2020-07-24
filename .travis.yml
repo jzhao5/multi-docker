@@ -27,8 +27,8 @@ deploy:
   edge: true
   provider: elasticbeanstalk
   region: "us-east-1"
-  app: "docker-react2"
-  env: "DockerReact2-env"
+  app: "multi-docker2"
+  env: "MultiDocker2-env"
   bucket_name: "myapp-demo-2020"
   bucket_path: "docker"
   on:
